@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafka - Tableau de bord</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .card {
+            background: white;
+            max-width: 500px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #00000015;
+        }
+
+        h1 {
+            color: #1e293b;
+        }
+
+        .number {
+            font-size: 65px;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 25px;
+        }
+
+        .status {
+            color: #16a34a;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>Tableau de bord Kafka</h1>
+    <p>Nombre total de messages traités</p>
+
+    <div class="number" id="totalMessages">0</div>
+
+    <p class="status" id="status">Connexion en cours...</p>
+</div>
+
+<script>
+    async function updateAnalytics() {
+        try {
+            const response = await fetch('/api/analytics');
+
+            if (!response.ok) {
+                throw new Error('Erreur API');
+            }
+
+            const total = await response.json();
+
+            document.getElementById('totalMessages').textContent = total;
+            document.getElementById('status').textContent =
+                'Connecté à Kafka - Mise à jour automatique';
+
+        } catch (error) {
+            document.getElementById('status').textContent =
+                'Erreur de connexion au serveur';
+        }
+    }
+
+    updateAnalytics();
+    setInterval(updateAnalytics, 1000);
+</script>
+
+</body>
+</html>
